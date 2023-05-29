@@ -1,4 +1,5 @@
 const express = require('express')
+const bcrypt = require('bcrypt-nodejs')
 
 const app = express()
 app.use(express.json())
@@ -29,6 +30,22 @@ app.get('/', (req, res) => {
 })
 
 app.post('/signin', (req, res) => {
+  bcrypt.compare(
+    'apples',
+    '$2a$10$C0LpC3umiT1wXgVxVAGVgOSH0b4Hmei9.QPtWc15b0iXed.1Ihj0q',
+    function (err, res) {
+      console.log('first guess', res)
+    }
+  )
+
+  bcrypt.compare(
+    'veggies',
+    '$2a$10$C0LpC3umiT1wXgVxVAGVgOSH0b4Hmei9.QPtWc15b0iXed.1Ihj0q',
+    function (err, res) {
+      console.log('second guess', res)
+    }
+  )
+
   if (
     req.body.email === database.users[0].email &&
     req.body.password === database.users[0].password
@@ -41,6 +58,9 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
   const { email, name, password } = req.body
+  bcrypt.hash(password, null, null, function (err, hash) {
+    console.log(hash)
+  })
   database.users.push({
     id: '125',
     name,
@@ -77,8 +97,8 @@ app.put('/image', (req, res) => {
   if (!found) res.status(400).json('Not found')
 })
 
-app.listen(3000, () => {
-  console.log('app is running on port 3000')
+app.listen(3005, () => {
+  console.log('app is running on port 3005')
 })
 
 /* API endpoints
